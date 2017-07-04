@@ -16,8 +16,10 @@ public class ProcessingData {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+
     private Date startDate;
     private Date endDate;
+
     private String aoi;
     private String product;
 
