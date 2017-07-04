@@ -17,7 +17,9 @@ import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URL;
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,8 +62,11 @@ public class ProcessingServiceImpl implements ProcessingService {
     }
 
     private String createZipResult(String result) throws IOException {
-        ZipUtil.pack(new File(result), new File("download.zip"));
-        return "donwload.zip";
+        String destPath = new StringBuffer("download/")
+                .append(new BigInteger(130,  new SecureRandom()).toString(16)).toString();
+        ZipUtil.pack(new File(result),
+                new File(destPath));
+        return destPath;
     }
 
     private Processing updateProcessingFinishedOK(Processing processing, String resultPath) {
@@ -85,8 +90,8 @@ public class ProcessingServiceImpl implements ProcessingService {
             String result = (String) client.call("execute", jsonData);
 
             HashMap<String, String> resultMap = new ObjectMapper().readValue(result, HashMap.class);
-            //String outPath = createZipResult(resultMap.get("outPath"));
-            updateProcessingFinishedOK(processing, "");
+            String outPath = createZipResult("/shared/"+resultMap.get("outPath"));
+            updateProcessingFinishedOK(processing, outPath);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             updateProcessingFinishedError(processing);
