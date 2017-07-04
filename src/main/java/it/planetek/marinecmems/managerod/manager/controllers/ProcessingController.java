@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by Francesco Bruni on 7/4/17.
@@ -19,6 +20,7 @@ public class ProcessingController {
     @Autowired
     private ProcessingService processingService;
 
+    @ResponseBody
     @RequestMapping(value = "/processings", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Processing startProcessing(@RequestBody  ProcessingModel processingModel){
         Processing processing = processingService.createNewProcessing(processingModel);
