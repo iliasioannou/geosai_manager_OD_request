@@ -17,3 +17,9 @@ Example call:
             "product":"1"
         }
     }
+
+# Build the Docker image
+
+In order to build the Docker image, just move in the *docker* folder and type:
+
+    ./build.sh <branch_name>
