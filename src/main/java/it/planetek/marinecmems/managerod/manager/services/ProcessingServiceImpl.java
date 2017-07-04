@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.zeroturnaround.zip.ZipUtil;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -83,6 +84,7 @@ public class ProcessingServiceImpl implements ProcessingService {
 
     @Override
     @Async(value = "processCallerExecutor")
+    @Transactional
     public void startProcessing(ProcessingModel processingModel, Processing processing) {
         try {
             String jsonData = new ObjectMapper().writeValueAsString(processingModel.getProcessingInputData());
