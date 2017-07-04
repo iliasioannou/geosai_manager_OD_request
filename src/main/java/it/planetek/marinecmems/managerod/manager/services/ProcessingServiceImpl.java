@@ -48,7 +48,7 @@ public class ProcessingServiceImpl implements ProcessingService {
         }).collect(Collectors.toList());
         ProcessingData processingData = new ProcessingData();
         processingData.setAoi(processingModel.getProcessingInputData().getAoi());
-        processingData.setEndDate(dates.get(1));
+        processingData.setStartDate(dates.get(1));
         processingData.setEndDate(dates.get(0));
         processingData.setProduct(processingModel.getProcessingInputData().getProduct());
 
