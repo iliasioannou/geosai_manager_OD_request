@@ -1,48 +1,37 @@
-package it.planetek.marinecmems.managerod.manager.domains;
+package it.planetek.marinecmems.managerod.manager.controllers;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import it.planetek.marinecmems.managerod.manager.domains.Processing;
+import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
 import it.planetek.marinecmems.managerod.manager.domains.constants.StatusConstants;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.hateoas.ResourceSupport;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Version;
 import java.util.Date;
 
 /**
- * Created by Francesco Bruni on 7/4/17.
+ * Created by francesco on 7/4/17.
  */
-@Entity
-public class Processing {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class ProcessingResource extends ResourceSupport{
     private String userEmail;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "processing_data_id")
     private ProcessingData processingData;
-
-
     private int status = StatusConstants.TODO;
-    @JsonFormat
-            (shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date timestampRequest;
-
-    @Version
-    @JsonFormat
-            (shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date lastUpdate;
-
     private String resultPath;
 
-    public Processing() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public ProcessingResource(String userEmail, ProcessingData processingData, int status, Date timestampRequest, Date lastUpdate, String resultPath) {
+        this.userEmail = userEmail;
+        this.processingData = processingData;
+        this.status = status;
+        this.timestampRequest = timestampRequest;
+        this.lastUpdate = lastUpdate;
+        this.resultPath = resultPath;
     }
 
     public String getUserEmail() {

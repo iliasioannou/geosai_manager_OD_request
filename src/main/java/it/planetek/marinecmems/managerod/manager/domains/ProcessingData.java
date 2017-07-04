@@ -1,5 +1,7 @@
 package it.planetek.marinecmems.managerod.manager.domains;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,8 +18,11 @@ public class ProcessingData {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
+    @JsonFormat
+            (shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date startDate;
+    @JsonFormat
+            (shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date endDate;
 
     private String aoi;

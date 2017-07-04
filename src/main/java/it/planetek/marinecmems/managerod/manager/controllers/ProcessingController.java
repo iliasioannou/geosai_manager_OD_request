@@ -4,8 +4,8 @@ import it.planetek.marinecmems.managerod.manager.controllers.models.ProcessingMo
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
 import it.planetek.marinecmems.managerod.manager.services.ProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,10 +25,22 @@ public class ProcessingController {
 
     @ResponseBody
     @RequestMapping(value = "/processings", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Processing startProcessing(@RequestBody  ProcessingModel processingModel){
+    public ResponseEntity<Resource<ProcessingResource>> startProcessing(@RequestBody  ProcessingModel processingModel){
         Processing processing = processingService.createNewProcessing(processingModel);
-        processingService.startProcessing(processingModel, processing);
-        return processing;
+        //processingService.startProcessing(processingModel, processing);
+        ProcessingResource processingResource = new ProcessingResource(
+                processing.getUserEmail(),
+                processing.getProcessingData(),
+                processing.getStatus(),
+                processing.getTimestampRequest(),
+                processing.getLastUpdate(),
+                processing.getResultPath()
+        );
+        Resource<ProcessingResource> resource = new Resource<>(processingResource);
+        resource.add(new Link("http://temisto.planetek.it:9999/processings/"+processing.getId(), "self"));
+        resource.add(new Link("http://temisto.planetek.it:9999/processings/"+processing.getId(), "processing"));
+        resource.add(new Link("http://temisto.planetek.it:9999/processings/"+processing.getId()+"/processingData/"+processing.getProcessingData().getId(), "processingData"));
+        return ResponseEntity.ok(resource);
 
     }
 }
