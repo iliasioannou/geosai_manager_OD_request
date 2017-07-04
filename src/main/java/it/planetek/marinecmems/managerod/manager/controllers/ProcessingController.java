@@ -24,7 +24,6 @@ public class ProcessingController {
     @RequestMapping(value = "/processings", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Processing startProcessing(@RequestBody  ProcessingModel processingModel){
         Processing processing = processingService.createNewProcessing(processingModel);
-        ;
         processingService.startProcessing(processingModel, processing);
         return processing;
     }
