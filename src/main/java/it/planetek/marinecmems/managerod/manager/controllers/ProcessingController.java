@@ -27,7 +27,7 @@ public class ProcessingController {
     @RequestMapping(value = "/processings", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Resource<ProcessingResource>> startProcessing(@RequestBody  ProcessingModel processingModel){
         Processing processing = processingService.createNewProcessing(processingModel);
-        //processingService.startProcessing(processingModel, processing);
+        processingService.startProcessing(processingModel, processing);
         ProcessingResource processingResource = new ProcessingResource(
                 processing.getUserEmail(),
                 processing.getProcessingData(),
