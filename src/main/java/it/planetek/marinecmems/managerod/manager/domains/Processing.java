@@ -25,7 +25,6 @@ public class Processing {
 
     private int status = StatusConstants.TODO;
 
-    @CreatedDate
     @DateTimeFormat(pattern = "yyyy-mm-dd H:M:s")
     private Date timestampRequest;
 

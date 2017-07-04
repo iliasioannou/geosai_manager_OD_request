@@ -55,6 +55,7 @@ public class ProcessingServiceImpl implements ProcessingService {
         Processing processing = new Processing();
         processing.setProcessingData(processingData);
         processing.setUserEmail(processingModel.getUserEmail());
+        processing.setTimestampRequest(new Date());
         return processingRepository.save(processing);
     }
 
