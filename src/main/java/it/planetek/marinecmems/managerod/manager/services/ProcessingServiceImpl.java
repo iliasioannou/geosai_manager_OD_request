@@ -10,7 +10,6 @@ import it.planetek.marinecmems.managerod.manager.domains.Processing;
 import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
 import it.planetek.marinecmems.managerod.manager.domains.constants.StatusConstants;
 import it.planetek.marinecmems.managerod.manager.repositories.ProcessingRepository;
-import it.planetek.marinecmems.managerod.rpcprocessor.ProcessorApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -35,9 +34,6 @@ public class ProcessingServiceImpl implements ProcessingService {
 
     @Autowired
     private ProcessingRepository processingRepository;
-
-    @Autowired
-    private ProcessorApi processorApi;
 
     @Override
     public Processing createNewProcessing(ProcessingModel processingModel) {
@@ -84,7 +80,7 @@ public class ProcessingServiceImpl implements ProcessingService {
     public void startProcessing(ProcessingModel processingModel, Processing processing) {
         try {
             String jsonData = new ObjectMapper().writeValueAsString(processingModel.getProcessingInputData());
-            XMLRPCClient client = new XMLRPCClient(new URL("http://temisto.planetek.it:9091"));
+            XMLRPCClient client = new XMLRPCClient(new URL("http://processors:9091"));
             String result = (String) client.call("execute", jsonData);
 
             HashMap<String, String> resultMap = new ObjectMapper().readValue(result, HashMap.class);
