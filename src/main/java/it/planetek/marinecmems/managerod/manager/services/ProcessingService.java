@@ -9,5 +9,7 @@ import it.planetek.marinecmems.managerod.manager.domains.Processing;
 public interface ProcessingService {
     Processing createNewProcessing(ProcessingModel processingModel);
 
-    void startProcessing(ProcessingModel processingModel, Processing processing);
+    Processing updateProcessingFinishedOK(Processing processing, String resultPath);
+
+    Processing updateProcessingFinishedError(Processing processing);
 }

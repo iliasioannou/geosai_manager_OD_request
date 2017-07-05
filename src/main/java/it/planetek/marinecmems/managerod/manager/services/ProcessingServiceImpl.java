@@ -11,6 +11,7 @@ import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
 import it.planetek.marinecmems.managerod.manager.domains.constants.StatusConstants;
 import it.planetek.marinecmems.managerod.manager.repositories.ProcessingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.zeroturnaround.zip.ZipUtil;
@@ -19,6 +20,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.text.ParseException;
@@ -62,47 +64,18 @@ public class ProcessingServiceImpl implements ProcessingService {
         return processingRepository.save(processing);
     }
 
-    private String createZipResult(String result) throws IOException {
-        String destPath = new StringBuffer("download/")
-                .append(new BigInteger(130,  new SecureRandom()).toString(16)).toString();
-        ZipUtil.pack(new File(result),
-                new File(destPath));
-        return destPath;
-    }
-
-    private Processing updateProcessingFinishedOK(Processing processing, String resultPath) {
+    @Override
+    public Processing updateProcessingFinishedOK(Processing processing, String resultPath) {
         processing.setStatus(StatusConstants.DONE);
         processing.setResultPath(resultPath);
         return processingRepository.save(processing);
     }
 
-    private Processing updateProcessingFinishedError(Processing processing) {
-        processing.setStatus(StatusConstants.DONE);
+    @Override
+    public Processing updateProcessingFinishedError(Processing processing) {
+        processing.setStatus(StatusConstants.ERROR);
         return processingRepository.save(processing);
     }
 
 
-    @Override
-    @Async(value = "processCallerExecutor")
-    @Transactional
-    public void startProcessing(ProcessingModel processingModel, Processing processing) {
-        try {
-            String jsonData = new ObjectMapper().writeValueAsString(processingModel.getProcessingInputData());
-            XMLRPCClient client = new XMLRPCClient(new URL("http://processors:9091"));
-            String result = (String) client.call("execute", jsonData);
-
-            HashMap<String, String> resultMap = new ObjectMapper().readValue(result, HashMap.class);
-            String outPath = createZipResult("/shared/"+resultMap.get("outPath"));
-            updateProcessingFinishedOK(processing, outPath);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            updateProcessingFinishedError(processing);
-        } catch (XMLRPCServerException ex) {
-            updateProcessingFinishedError(processing);
-        } catch (XMLRPCException ex) {
-            updateProcessingFinishedError(processing);
-        } catch (Exception ex) {
-            updateProcessingFinishedError(processing);
-        }
-    }
 }

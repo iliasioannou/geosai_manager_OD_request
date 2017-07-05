@@ -2,6 +2,10 @@ package it.planetek.marinecmems.managerod.manager.domains;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import it.planetek.marinecmems.managerod.manager.domains.constants.StatusConstants;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,6 +14,7 @@ import java.util.Date;
  * Created by Francesco Bruni on 7/4/17.
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Processing {
 
     @Id
@@ -23,11 +28,12 @@ public class Processing {
 
 
     private int status = StatusConstants.TODO;
+    @CreatedDate
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date timestampRequest;
 
-    @Version
+    @LastModifiedDate
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date lastUpdate;
