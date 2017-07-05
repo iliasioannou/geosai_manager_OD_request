@@ -1,5 +1,6 @@
 package it.planetek.marinecmems.managerod.processor.utils;
 
+import org.springframework.stereotype.Service;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
@@ -9,6 +10,7 @@ import java.security.SecureRandom;
 /**
  * Created by Francesco Bruni on 7/5/17.
  */
+@Service
 public class Zipper {
 
     /***

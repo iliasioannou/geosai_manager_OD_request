@@ -26,9 +26,6 @@ import java.util.Optional;
 @Service("ProcessorService")
 public class ProcessorServiceImpl implements ProcessorService {
 
-    @Value("${processor.url}")
-    private String processorUrl;
-
     @Value("${processor.methodName}")
     private String processorMethodName;
 
@@ -38,34 +35,40 @@ public class ProcessorServiceImpl implements ProcessorService {
     @Value("${download.outputFolder}")
     private String downloadOutputFolder;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Autowired
     private ProcessingService processingService;
 
+    @Autowired
+    private Zipper zipperService;
+
+    @Autowired
+    private XMLRPCClient client;
 
     /***
      * Call the RPC XML server via RPC XML client
-     * @param url the RPC XML server url
      * @param jsonData the data to be posted
      * @param methodName the method name over the RPC server
      * @return the method result
      * @throws XMLRPCException for common issues related to RPC server
      * @throws MalformedURLException if provided URL is not syntactically correct
      */
-    private String callRpcServer(String url, String jsonData, String methodName) throws XMLRPCException, MalformedURLException {
-        XMLRPCClient client = new XMLRPCClient(new URL(url));
+    private String callRpcServer(String jsonData, String methodName) throws XMLRPCException, MalformedURLException {
         return (String) client.call(methodName, jsonData);
     }
 
     /**
-     * Validate result data coming from processor: check for present 'outPath' and 'result' attribute
+     * Validate result data coming from processor: check for present 'outPath' and  valid 'result' attribute
      * @param resultData the resultData to be validated
      * @throws ProcessorResultException if a rule doesn't apply
      */
-    private void validateResult(HashMap<String, String> resultData) throws ProcessorResultException{
+    private void validateResult(HashMap<String, Object> resultData) throws ProcessorResultException{
         Optional.ofNullable(resultData.getOrDefault("outPath", null))
                 .orElseThrow(() -> new ProcessorResultException("Out path folder seems not valid!"));
 
         Optional.ofNullable(resultData.getOrDefault("returnCode", null))
+                .map(rs -> ((int)rs == 0) ? true : null)
                 .orElseThrow(() -> new ProcessorResultException("Expected result is not 0"));
     }
 
@@ -82,19 +85,21 @@ public class ProcessorServiceImpl implements ProcessorService {
     }
 
     /***
-     * Call the processor via RPC XML call
+     * Start processing
+     * @param processingModel the processing model info with informations coming from client
+     * @param processing a processing instance (with persisted local informations)
      *
      */
     @Async(value = "processCallerExecutor")
     public String startProcessing(ProcessingModel processingModel, Processing processing) {
         try {
-            String jsonData = new ObjectMapper().writeValueAsString(processingModel.getProcessingInputData());
-            String result = callRpcServer(processorUrl, jsonData, processorMethodName);
+            String jsonData = objectMapper.writeValueAsString(processingModel.getProcessingInputData());
+            String result = callRpcServer(jsonData, processorMethodName);
 
-            HashMap<String, String> resultMap = new ObjectMapper().readValue(result, HashMap.class);
+            HashMap<String, Object> resultMap = objectMapper.readValue(result, HashMap.class);
             validateResult(resultMap);
-            String outPath = new Zipper().zipFileWithRandomName(
-                    processorOuptutFolder.concat(resultMap.get("outPath")),
+            String outPath = zipperService.zipFileWithRandomName(
+                    processorOuptutFolder.concat((String)resultMap.get("outPath")),
                     downloadOutputFolder
             );
             updateResult(processing, outPath);
