@@ -4,5 +4,5 @@ ARG branch
 WORKDIR /
 RUN git clone -b $branch https://teamEreticoTfs:vAsK*AIJFB@tfs.planetek.it/SBU-GS/pkz029_UU_CMEMS/_git/pkz029_UU_CMEMS_Manager_OD_Request /src
 WORKDIR /src
-RUN mvn package -Dmaven.test.skip=true
+RUN mvn package
 CMD java -jar target/manager.jar
