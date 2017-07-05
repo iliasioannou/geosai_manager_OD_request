@@ -23,3 +23,13 @@ Example call:
 In order to build the Docker image, just move in the *docker* folder and type:
 
     ./build.sh <branch_name>
+
+# Run in local
+
+Check compose file to use the *planetek/manager_od_dev* image
+check application properties file to be sure all needed services are up and running;
+build the image
+
+    ./build_dev.sh <develop> 
+
+Run compose!
