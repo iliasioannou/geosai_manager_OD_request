@@ -1,6 +1,7 @@
 package it.planetek.marinecmems.managerod.processor.services;
 
 import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputParamsException;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Optional;
 /**
  * Created by Francesco Bruni - <bruni@planetek.it> - on 7/6/17.
  */
+@Service("ProcessorParamValidatorService")
 public class ProcessorParamValidatorServiceImpl implements ProcessorParamValidatorService {
     @Override
     public String validateAoi(String aoi) throws ProcessingInputParamsException {

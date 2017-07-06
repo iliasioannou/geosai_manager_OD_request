@@ -1,15 +1,28 @@
 package it.planetek.marinecmems.managerod.manager.controllers.models;
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * Created by francesco on 7/5/17.
+ * Created by Francesco Bruni <bruni@planetek.it> on 7/5/17.
  */
 public class ProcessingInputData {
 
+    @NotNull
     private List<String> dates;
+
+    @NotBlank
+    @NotNull
     private String aoi;
+
+    @NotBlank
+    @NotNull
     private String product;
+
+
     private final String procType = "custom";
 
     public ProcessingInputData() {

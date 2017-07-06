@@ -10,10 +10,12 @@ import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 
 /**
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @RepositoryRestController
 @RequestMapping("/processings")
+@Validated
 public class ProcessingController {
 
     @Autowired
@@ -31,7 +34,7 @@ public class ProcessingController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Processing> startProcessing(@RequestBody  ProcessingModel processingModel) throws ProcessingInputParamsException {
+    public ResponseEntity<Processing> startProcessing(@Valid @RequestBody  ProcessingModel processingModel, BindingResult bindingResult) throws ProcessingInputParamsException {
         Processing processing = processingService.createNewProcessing(processingModel);
         processorService.startProcessing(processingModel, processing);
         return new ResponseEntity<>(processing, HttpStatus.CREATED);

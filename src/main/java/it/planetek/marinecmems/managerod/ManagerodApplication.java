@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,4 +46,9 @@ public class ManagerodApplication {
 	    return new XMLRPCClient(new URL(processorUrl));
 
     }
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        return new MethodValidationPostProcessor();
+    }
+
 }

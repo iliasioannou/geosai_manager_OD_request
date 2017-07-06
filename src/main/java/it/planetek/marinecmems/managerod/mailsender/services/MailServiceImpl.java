@@ -7,6 +7,7 @@ import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
 import it.planetek.marinecmems.managerod.processor.services.HumanReadbleExctractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import java.util.stream.Stream;
 /**
  * Created by Francesco Bruni - <bruni@planetek.it> - on 7/5/17.
  */
+@Service("MailService")
 public class MailServiceImpl implements MailService{
 
     @Value("${mail.from}")
