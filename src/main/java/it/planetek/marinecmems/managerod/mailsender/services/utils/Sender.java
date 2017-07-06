@@ -22,6 +22,8 @@ public class Sender {
      * Send mail to specified address, with provided message
      * @param toAddress the address the email will be sent to
      * @param message the message will be attached to sent mail
+     * @param fromAddress the address the email will be sent from
+     * @param subject the subject the mail will be sent with
      */
     public boolean sendMail(String fromAddress, String subject, String toAddress, String message) {
         MimeMessage mail = javaMailSender.createMimeMessage();
