@@ -22,7 +22,7 @@ import javax.validation.Valid;
 
 
 /**
- * Created by Francesco Bruni on 7/4/17.
+ * Created by Francesco Bruni - <bruni@planetek.it> - on 7/4/17.
  */
 @RepositoryRestController
 @RequestMapping("/processings")
