@@ -1,4 +1,4 @@
-package it.planetek.marinecmems.managerod.processor;
+package it.planetek.marinecmems.managerod.processor.services;
 
 import de.timroes.axmlrpc.XMLRPCClient;
 import de.timroes.axmlrpc.XMLRPCException;
@@ -17,16 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.util.ReflectionUtils;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.net.MalformedURLException;
@@ -42,7 +34,6 @@ import static org.mockito.Mockito.when;
  * Created by Francesco Bruni on 7/5/17.
  */
 @RunWith(MockitoJUnitRunner.class)
-@PrepareForTest(ProcessorServiceImpl.class)
 public class ProcessorServiceTest {
 
     @Mock
