@@ -1,16 +1,13 @@
 package it.planetek.marinecmems.managerod.mailsender.services;
 
-import it.planetek.marinecmems.managerod.mailsender.services.utils.Sender;
+import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputParamsException;
+import it.planetek.marinecmems.managerod.mailsender.utils.Sender;
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
 import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
 import it.planetek.marinecmems.managerod.processor.services.HumanReadbleExctractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,7 +44,7 @@ public class MailServiceImpl implements MailService{
      * @param processing the processing instance whose enqueued job refers to
      */
     @Override
-    public String sendMailEnqueuedRequest(Processing processing) {
+    public String sendMailEnqueuedRequest(Processing processing) throws ProcessingInputParamsException {
         String text = "Dear "
                 .concat(processing.getUserEmail())
                 .concat(",\n")
@@ -64,7 +61,9 @@ public class MailServiceImpl implements MailService{
      * @param processingData the instance which whose provided data refer to
      * @return the entire string
      */
-    private String generateInputParamString(ProcessingData processingData){
+    private String generateInputParamString(ProcessingData processingData) throws ProcessingInputParamsException {
+
+
         return "\n".concat(Stream.of(
                 "Provided request parameters:",
                 humanReadbleExctractor.extractAoI(processingData.getAoi()),
@@ -81,7 +80,7 @@ public class MailServiceImpl implements MailService{
      * @return the sent text
      */
     @Override
-    public String sendMailSucceedRequest(Processing processing) {
+    public String sendMailSucceedRequest(Processing processing) throws ProcessingInputParamsException {
         String text = "Dear "
                 .concat(processing.getUserEmail())
                 .concat(",\n")
@@ -100,7 +99,7 @@ public class MailServiceImpl implements MailService{
      * @return the sent text
      */
     @Override
-    public String sendMailFailedRequest(Processing processing) {
+    public String sendMailFailedRequest(Processing processing) throws ProcessingInputParamsException {
         String text = "Dear "
                 .concat(processing.getUserEmail())
                 .concat(",\n")

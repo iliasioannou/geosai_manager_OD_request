@@ -1,6 +1,6 @@
 package it.planetek.marinecmems.managerod.mailsender.services;
 
-import it.planetek.marinecmems.managerod.mailsender.services.utils.Sender;
+import it.planetek.marinecmems.managerod.mailsender.utils.Sender;
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
 import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
 import it.planetek.marinecmems.managerod.processor.services.HumanReadbleExctractor;

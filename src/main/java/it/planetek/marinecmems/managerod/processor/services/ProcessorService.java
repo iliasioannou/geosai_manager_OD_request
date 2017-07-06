@@ -1,5 +1,6 @@
 package it.planetek.marinecmems.managerod.processor.services;
 
+import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputParamsException;
 import it.planetek.marinecmems.managerod.manager.controllers.models.ProcessingModel;
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
 
@@ -8,6 +9,6 @@ import it.planetek.marinecmems.managerod.manager.domains.Processing;
  */
 public interface ProcessorService {
 
-    String startProcessing(ProcessingModel processingModel, Processing processing);
+    Processing startProcessing(ProcessingModel processingModel, Processing processing) throws ProcessingInputParamsException;
 
 }

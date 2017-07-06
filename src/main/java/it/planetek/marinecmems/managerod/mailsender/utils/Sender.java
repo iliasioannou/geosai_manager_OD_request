@@ -1,4 +1,4 @@
-package it.planetek.marinecmems.managerod.mailsender.services.utils;
+package it.planetek.marinecmems.managerod.mailsender.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;

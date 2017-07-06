@@ -2,9 +2,13 @@ package it.planetek.marinecmems.managerod.processor.services;
 
 import de.timroes.axmlrpc.XMLRPCClient;
 import de.timroes.axmlrpc.XMLRPCException;
+import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputParamsException;
+import it.planetek.marinecmems.managerod.mailsender.services.MailService;
 import it.planetek.marinecmems.managerod.manager.controllers.models.ProcessingInputData;
 import it.planetek.marinecmems.managerod.manager.controllers.models.ProcessingModel;
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
+import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
+import it.planetek.marinecmems.managerod.manager.domains.constants.StatusConstants;
 import it.planetek.marinecmems.managerod.manager.services.ProcessingService;
 import it.planetek.marinecmems.managerod.manager.services.ProcessingServiceImpl;
 import it.planetek.marinecmems.managerod.processor.exceptions.ProcessorResultException;
@@ -24,14 +28,13 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Date;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anySet;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by Francesco Bruni on 7/5/17.
+ * Created by Francesco Bruni - <bruni.planetek.it> on 7/5/17.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessorServiceTest {
@@ -45,16 +48,20 @@ public class ProcessorServiceTest {
     @Mock
     private ProcessingService processingService;
 
+    @Mock
+    private MailService mailService;
 
     @InjectMocks
     private ProcessorServiceImpl processorService = new ProcessorServiceImpl();
 
+    @Mock
+    private ProcessorParamValidatorService processorParamValidatorService;
 
     private ProcessingModel processingModel;
 
 
     @Before
-    public void setUp() throws MalformedURLException, XMLRPCException {
+    public void setUp() throws MalformedURLException, XMLRPCException, ProcessingInputParamsException {
         Processing savedProcessing = new Processing();
         savedProcessing.setResultPath("ciccio.zip");
 
@@ -62,7 +69,12 @@ public class ProcessorServiceTest {
         when(zipper.zipFileWithRandomName(anyString(), anyString())).thenReturn("aaa.zip");
         when(processingService.updateProcessingFinishedOK(any(Processing.class), anyString())).thenReturn(savedProcessing);
         when(processingService.updateProcessingFinishedError(any(Processing.class))).thenReturn(savedProcessing);
-
+        when(mailService.sendMailEnqueuedRequest(any(Processing.class))).thenReturn("ok");
+        when(mailService.sendMailFailedRequest(any(Processing.class))).thenReturn("ok");
+        when(mailService.sendMailSucceedRequest(any(Processing.class))).thenReturn("ok");
+        when(processorParamValidatorService.validateAoi(anyString())).thenReturn("aoi");
+        when(processorParamValidatorService.validateProduct(anyString())).thenReturn("aoi");
+        when(processorParamValidatorService.validateDates(anyListOf(Date.class))).thenReturn(Arrays.asList(new Date(), new Date()));
         ReflectionTestUtils.setField(processorService, "processorMethodName", "execute");
         ReflectionTestUtils.setField(processorService, "processorOuptutFolder", "output");
         ReflectionTestUtils.setField(processorService, "downloadOutputFolder", "/download");
@@ -79,11 +91,13 @@ public class ProcessorServiceTest {
    }
 
     @Test
-    public void startProcessingTest() throws XMLRPCException {
+    public void startProcessingTest() throws XMLRPCException, ProcessingInputParamsException {
         when(client.call(anyString(), anyString())).thenReturn("{\"returnCode\":0, \"outPath\":\"/blablabla\"}");
-        String path = processorService.startProcessing(processingModel, new Processing());
-        Assert.assertEquals(path, "aaa.zip");
+        Processing processing = new Processing();
+        ProcessingData processingInputData = new ProcessingData();
+        processing.setProcessingData(processingInputData);
+        Processing resultProcessing = processorService.startProcessing(processingModel, processing);
+        Assert.assertEquals(resultProcessing.getResultPath(), "ciccio.zip");
     }
-
 
 }

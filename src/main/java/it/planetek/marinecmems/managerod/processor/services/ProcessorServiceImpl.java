@@ -3,6 +3,8 @@ package it.planetek.marinecmems.managerod.processor.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.timroes.axmlrpc.XMLRPCClient;
 import de.timroes.axmlrpc.XMLRPCException;
+import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputParamsException;
+import it.planetek.marinecmems.managerod.mailsender.services.MailService;
 import it.planetek.marinecmems.managerod.processor.utils.Zipper;
 import it.planetek.marinecmems.managerod.manager.controllers.models.ProcessingModel;
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
@@ -16,9 +18,11 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Created by Francesco Bruni on 7/5/17.
@@ -45,6 +49,12 @@ public class ProcessorServiceImpl implements ProcessorService {
 
     @Autowired
     private XMLRPCClient client;
+
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private ProcessorParamValidatorService processorParamValidatorService;
 
     /***
      * Call the RPC XML server via RPC XML client
@@ -78,8 +88,8 @@ public class ProcessorServiceImpl implements ProcessorService {
      * @param resultPath the final path to be saved
      */
     @Transactional
-    public void updateResult(Processing processing, String resultPath){
-        Optional.ofNullable(resultPath)
+    public Processing updateResult(Processing processing, String resultPath){
+        return Optional.ofNullable(resultPath)
                 .map(rp -> processingService.updateProcessingFinishedOK(processing, rp))
                 .orElseGet(() -> processingService.updateProcessingFinishedError(processing));
     }
@@ -91,8 +101,12 @@ public class ProcessorServiceImpl implements ProcessorService {
      *
      */
     @Async(value = "processCallerExecutor")
-    public String startProcessing(ProcessingModel processingModel, Processing processing) {
+    public Processing startProcessing(ProcessingModel processingModel, Processing processing) throws ProcessingInputParamsException {
         try {
+            processorParamValidatorService.validateAoi(processingModel.getProcessingInputData().getAoi());
+            processorParamValidatorService.validateProduct(processingModel.getProcessingInputData().getProduct());
+            processorParamValidatorService.validateDates(Arrays.asList(processing.getProcessingData().getStartDate(), processing.getProcessingData().getEndDate()));
+
             String jsonData = objectMapper.writeValueAsString(processingModel.getProcessingInputData());
             String result = callRpcServer(jsonData, processorMethodName);
 
@@ -102,12 +116,14 @@ public class ProcessorServiceImpl implements ProcessorService {
                     processorOuptutFolder.concat((String)resultMap.get("outPath")),
                     downloadOutputFolder
             );
-            updateResult(processing, outPath);
-            return outPath;
+            Processing resultProcessing = updateResult(processing, outPath);
+            mailService.sendMailSucceedRequest(resultProcessing);
+            return resultProcessing;
         } catch (XMLRPCException | IOException | ProcessorResultException ex){
             ex.printStackTrace();
-            updateResult(processing, null);
-            return null;
+            Processing resultProcessing = updateResult(processing, null);
+            mailService.sendMailEnqueuedRequest(resultProcessing);
+            return resultProcessing;
         }
     }
 }

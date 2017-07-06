@@ -1,5 +1,7 @@
 package it.planetek.marinecmems.managerod.processor.services;
 
+import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputParamsException;
+
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +15,7 @@ public interface HumanReadbleExctractor {
      * @param aoi the aoi whose human understable name needs to be extracted by
      * @return the human representation
      */
-    String extractAoI(String aoi);
+    String extractAoI(String aoi) throws ProcessingInputParamsException;
 
 
     /***
@@ -21,7 +23,7 @@ public interface HumanReadbleExctractor {
      * @param aoi the aoi whose human understable product needs to be extracted by
      * @return the human representation
      */
-    String extractProduct(String aoi);
+    String extractProduct(String aoi) throws ProcessingInputParamsException;
 
 
     /***
@@ -29,7 +31,7 @@ public interface HumanReadbleExctractor {
      * @param dates the aoi whose human understable dates needs to be extracted by
      * @return the human representation
      */
-    String extractDates(List<Date> dates);
+    String extractDates(List<Date> dates) throws ProcessingInputParamsException;
 
 
 }
