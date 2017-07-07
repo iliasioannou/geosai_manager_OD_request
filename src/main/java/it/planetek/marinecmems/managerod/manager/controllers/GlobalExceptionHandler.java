@@ -52,6 +52,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public Map handle(ProcessingRequestAlreadyInQueueException exception) {
         log.error(exception.getMessage());
+        log.info("------ END MANAGER OD REQUEST -----");
         return error("You cannot star a new processing until a previous one has not been marked as completed.");
     }
 

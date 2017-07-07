@@ -45,8 +45,8 @@ public class ProcessingController {
     public ResponseEntity<Processing> startProcessing(@Valid @RequestBody ProcessingModel processingModel, BindingResult bindingResult) throws ProcessingInputParamsException, ProcessingRequestAlreadyInQueueException {
         log.info("------ START MANAGER OD REQUEST -----");
         log.info("Request user: ".concat(processingModel.getUserEmail()));
-        log.info("RequestData: AOI".concat(processingModel.getProcessingInputData().getAoi()));
-        log.info("RequestData: Products".concat(processingModel.getProcessingInputData().getProducts()));
+        log.info("RequestData: AOI ".concat(processingModel.getProcessingInputData().getAoi()));
+        log.info("RequestData: Products ".concat(processingModel.getProcessingInputData().getProducts()));
         log.info("RequestData: Start Date ".concat(processingModel.getProcessingInputData().getDates().get(0)));
         log.info("RequestData: End Date ".concat(processingModel.getProcessingInputData().getDates().get(1)));
 
