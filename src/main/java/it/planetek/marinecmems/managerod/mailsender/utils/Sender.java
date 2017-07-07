@@ -28,12 +28,13 @@ public class Sender {
     public boolean sendMail(String fromAddress, String subject, String toAddress, String message) {
         MimeMessage mail = javaMailSender.createMimeMessage();
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "utf-8");
+            mimeMessage.setContent(message, "text/html");
             helper.setTo(toAddress);
-            helper.setFrom(fromAddress);
             helper.setSubject(subject);
-            helper.setText(message);
-            javaMailSender.send(mail);
+            helper.setFrom(fromAddress);
+            javaMailSender.send(mimeMessage);
             return true;
         } catch (MessagingException | MailException e) {
             e.printStackTrace();
