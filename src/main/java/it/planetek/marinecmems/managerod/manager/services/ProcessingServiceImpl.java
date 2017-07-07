@@ -5,11 +5,13 @@ import it.planetek.marinecmems.managerod.manager.domains.Processing;
 import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
 import it.planetek.marinecmems.managerod.manager.domains.constants.StatusConstants;
 import it.planetek.marinecmems.managerod.manager.repositories.ProcessingRepository;
+import it.planetek.marinecmems.managerod.processor.exceptions.ProcessingRequestAlreadyInQueueException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,6 +61,19 @@ public class ProcessingServiceImpl implements ProcessingService {
     public Processing updateProcessingFinishedError(Processing processing) {
         processing.setStatus(StatusConstants.ERROR);
         return processingRepository.save(processing);
+    }
+
+    /***
+     * Check if a request by the same user has been already enqueued and raise an exception if so.
+     * Completed requests do not apply to "enqueued" status.
+     * @param userEmail the email which will be used to check current processings
+     * @throws ProcessingRequestAlreadyInQueueException if processing has been already enqueued
+     */
+    @Override
+    public void isAlreadyEnqueued(String userEmail) throws ProcessingRequestAlreadyInQueueException {
+        List<Processing> processings = processingRepository.findByUserEmailAndStatusNotIn(userEmail, Arrays.asList(StatusConstants.TODO, StatusConstants.WIP));
+        if (processings.size() > 0)
+            throw new ProcessingRequestAlreadyInQueueException("Processing request has been already enqueued");
     }
 
 

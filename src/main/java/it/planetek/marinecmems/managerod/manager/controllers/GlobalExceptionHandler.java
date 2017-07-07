@@ -1,5 +1,6 @@
-package it.planetek.marinecmems.managerod.manager.controllers.models;
+package it.planetek.marinecmems.managerod.manager.controllers;
 
+import it.planetek.marinecmems.managerod.processor.exceptions.ProcessingRequestAlreadyInQueueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -39,6 +40,13 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList()));
+    }
+
+    @ExceptionHandler
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map handle(ProcessingRequestAlreadyInQueueException exception) {
+        return error(exception.getMessage());
     }
 
     private Map error(Object message) {

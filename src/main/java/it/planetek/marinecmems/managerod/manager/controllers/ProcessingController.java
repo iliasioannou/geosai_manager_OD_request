@@ -5,6 +5,7 @@ import it.planetek.marinecmems.managerod.mailsender.services.MailService;
 import it.planetek.marinecmems.managerod.manager.controllers.models.ProcessingModel;
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
 import it.planetek.marinecmems.managerod.manager.services.ProcessingService;
+import it.planetek.marinecmems.managerod.processor.exceptions.ProcessingRequestAlreadyInQueueException;
 import it.planetek.marinecmems.managerod.processor.services.ProcessorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -40,7 +41,8 @@ public class ProcessingController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Processing> startProcessing(@Valid @RequestBody  ProcessingModel processingModel, BindingResult bindingResult) throws ProcessingInputParamsException {
+    public ResponseEntity<Processing> startProcessing(@Valid @RequestBody ProcessingModel processingModel, BindingResult bindingResult) throws ProcessingInputParamsException, ProcessingRequestAlreadyInQueueException {
+        processingService.isAlreadyEnqueued(processingModel.getUserEmail());
         Processing processing = processingService.createNewProcessing(processingModel);
         mailService.sendMailEnqueuedRequest(processing);
         processorService.startProcessing(processingModel, processing);
