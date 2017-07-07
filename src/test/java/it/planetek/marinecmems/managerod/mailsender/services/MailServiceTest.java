@@ -1,5 +1,6 @@
 package it.planetek.marinecmems.managerod.mailsender.services;
 
+import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputParamsException;
 import it.planetek.marinecmems.managerod.mailsender.utils.Sender;
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
 import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
@@ -12,9 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Date;
 
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -36,9 +39,13 @@ public class MailServiceTest {
     private Processing processing;
 
     @Before
-    public void setUp(){
+    public void setUp() throws ProcessingInputParamsException {
         MockitoAnnotations.initMocks(this);
         when(sender.sendMail(anyString(),anyString(), anyString(), anyString())).thenReturn(true);
+        when(humanReadbleExctractor.extractAoI(anyString())).thenReturn("1");
+        when(humanReadbleExctractor.extractProduct(anyString())).thenReturn("15");
+        when(humanReadbleExctractor.extractDates(anyListOf(Date.class))).thenReturn("1");
+        ReflectionTestUtils.setField(mailService, "downloadBasePath", "downloadPath");
         processing = new Processing();
         ProcessingData processingData = new ProcessingData();
         processingData.setAoi("1");
