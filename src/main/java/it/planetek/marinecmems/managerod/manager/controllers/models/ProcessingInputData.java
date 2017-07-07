@@ -39,12 +39,12 @@ public class ProcessingInputData {
         this.aoi = aoi;
     }
 
-    public String getProduct() {
+    public String getProducts() {
         return products;
     }
 
-    public void setProduct(String product) {
-        this.products = product;
+    public void setProducts(String products) {
+        this.products = products;
     }
 
     public String getProcType() {
