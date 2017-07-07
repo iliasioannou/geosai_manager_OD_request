@@ -73,7 +73,7 @@ public class ProcessingServiceImpl implements ProcessingService {
     public void isAlreadyEnqueued(String userEmail) throws ProcessingRequestAlreadyInQueueException {
         List<Processing> processings = processingRepository.findByUserEmailAndStatusNotIn(userEmail, Arrays.asList(StatusConstants.TODO, StatusConstants.WIP));
         if (processings.size() > 0)
-            throw new ProcessingRequestAlreadyInQueueException("Processing request has been already enqueued");
+            throw new ProcessingRequestAlreadyInQueueException("Processing request has been already enqueued; user email is " + userEmail);
     }
 
 

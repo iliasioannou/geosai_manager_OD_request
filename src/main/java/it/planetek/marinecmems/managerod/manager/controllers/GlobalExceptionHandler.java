@@ -1,6 +1,8 @@
 package it.planetek.marinecmems.managerod.manager.controllers;
 
 import it.planetek.marinecmems.managerod.processor.exceptions.ProcessingRequestAlreadyInQueueException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,6 +23,9 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 @Component
 public class GlobalExceptionHandler {
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+
     @ExceptionHandler
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -46,7 +51,8 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.CONFLICT)
     public Map handle(ProcessingRequestAlreadyInQueueException exception) {
-        return error(exception.getMessage());
+        log.error(exception.getMessage());
+        return error("You cannot star a new processing until a previous one has not been marked as completed.");
     }
 
     private Map error(Object message) {
