@@ -8,12 +8,7 @@ import it.planetek.marinecmems.managerod.manager.controllers.models.ProcessingIn
 import it.planetek.marinecmems.managerod.manager.controllers.models.ProcessingModel;
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
 import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
-import it.planetek.marinecmems.managerod.manager.domains.constants.StatusConstants;
 import it.planetek.marinecmems.managerod.manager.services.ProcessingService;
-import it.planetek.marinecmems.managerod.manager.services.ProcessingServiceImpl;
-import it.planetek.marinecmems.managerod.processor.exceptions.ProcessorResultException;
-import it.planetek.marinecmems.managerod.processor.services.ProcessorService;
-import it.planetek.marinecmems.managerod.processor.services.ProcessorServiceImpl;
 import it.planetek.marinecmems.managerod.processor.utils.Zipper;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +21,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -84,7 +78,7 @@ public class ProcessorServiceTest {
 
         ProcessingInputData processingInputData = new ProcessingInputData();
         processingInputData.setAoi("1");
-        processingInputData.setProduct("15");
+        processingInputData.setProducts("15");
         processingInputData.setDates(Arrays.asList("2017-02-01", "2017-02-01"));
 
         processingModel.setProcessingInputData(processingInputData);

@@ -5,11 +5,11 @@ import de.timroes.axmlrpc.XMLRPCClient;
 import de.timroes.axmlrpc.XMLRPCException;
 import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputParamsException;
 import it.planetek.marinecmems.managerod.mailsender.services.MailService;
-import it.planetek.marinecmems.managerod.processor.utils.Zipper;
 import it.planetek.marinecmems.managerod.manager.controllers.models.ProcessingModel;
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
-import it.planetek.marinecmems.managerod.processor.exceptions.ProcessorResultException;
 import it.planetek.marinecmems.managerod.manager.services.ProcessingService;
+import it.planetek.marinecmems.managerod.processor.exceptions.ProcessorResultException;
+import it.planetek.marinecmems.managerod.processor.utils.Zipper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -18,11 +18,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Created by Francesco Bruni on 7/5/17.
@@ -104,7 +102,7 @@ public class ProcessorServiceImpl implements ProcessorService {
     public Processing startProcessing(ProcessingModel processingModel, Processing processing) throws ProcessingInputParamsException {
         try {
             processorParamValidatorService.validateAoi(processingModel.getProcessingInputData().getAoi());
-            processorParamValidatorService.validateProduct(processingModel.getProcessingInputData().getProduct());
+            processorParamValidatorService.validateProduct(processingModel.getProcessingInputData().getProducts());
             processorParamValidatorService.validateDates(Arrays.asList(processing.getProcessingData().getStartDate(), processing.getProcessingData().getEndDate()));
 
             String jsonData = objectMapper.writeValueAsString(processingModel.getProcessingInputData());
