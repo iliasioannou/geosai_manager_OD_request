@@ -26,7 +26,6 @@ public class Sender {
      * @param subject the subject the mail will be sent with
      */
     public boolean sendMail(String fromAddress, String subject, String toAddress, String message) {
-        MimeMessage mail = javaMailSender.createMimeMessage();
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "utf-8");

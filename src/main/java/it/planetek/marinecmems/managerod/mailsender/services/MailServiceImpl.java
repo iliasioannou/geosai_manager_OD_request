@@ -72,9 +72,9 @@ public class MailServiceImpl implements MailService{
         return "<div>".concat(Stream.of(
                 "<p>Provided request parameters:</p>",
                 "<ul>",
-                "<li> Area of Interest: ".concat(humanReadbleExctractor.extractAoI(processingData.getAoi())).concat("</li>"),
-                "<li>Products: ".concat(humanReadbleExctractor.extractProduct(processingData.getProduct())).concat("</li>"),
-                "<li>Dates: ".concat(humanReadbleExctractor.extractDates(Arrays.asList(processingData.getStartDate(), processingData.getEndDate()))).concat("</li>"),
+                "<li><b>Area of Interest</b>: ".concat(humanReadbleExctractor.extractAoI(processingData.getAoi())).concat("</li>"),
+                "<li><b>Products</b>: ".concat(humanReadbleExctractor.extractProduct(processingData.getProduct())).concat("</li>"),
+                "<li><b>Dates</b>: ".concat(humanReadbleExctractor.extractDates(Arrays.asList(processingData.getStartDate(), processingData.getEndDate()))).concat("</li>"),
                 "</ul>"
         ).collect(Collectors.joining("\n"))).concat("</div>");
 
@@ -94,7 +94,7 @@ public class MailServiceImpl implements MailService{
                 .concat("<p>your request has been processed and result is available at this ")
                 .concat("<a href=")
                 .concat(downloadBasePath)
-                .concat(processing.getResultPath().replace("shared", "") + ">link</a>")
+                .concat(processing.getResultPath().replace("shared", "") + ">link</a>.")
                 .concat(generateInputParamString(processing.getProcessingData()))
                 .concat("<br /><br /><p>Best,<p>")
                 .concat("<p>CMEMS Marine Team</p>");
