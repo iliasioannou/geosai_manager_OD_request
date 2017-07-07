@@ -4,7 +4,7 @@ import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputPa
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
 
 /**
- * Created by Francesco on 7/5/17.
+ * Created by Francesco Bruni - <bruni@planetek.it> - on 7/5/17.
  */
 public interface MailService {
     String sendMailEnqueuedRequest(Processing processing) throws ProcessingInputParamsException;

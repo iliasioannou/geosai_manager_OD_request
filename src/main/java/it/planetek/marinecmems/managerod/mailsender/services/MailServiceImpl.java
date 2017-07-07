@@ -25,6 +25,9 @@ public class MailServiceImpl implements MailService{
     @Value("${mail.subject}")
     private String subject;
 
+    @Value("${download.downloadBasePath}")
+    private String downloadBasePath;
+
     @Autowired
     private HumanReadbleExctractor humanReadbleExctractor;
 
@@ -87,7 +90,7 @@ public class MailServiceImpl implements MailService{
                 .concat(processing.getUserEmail())
                 .concat(",\n")
                 .concat("your request has been processed and result is available at this link:\n")
-                .concat(processing.getResultPath())
+                .concat(downloadBasePath.concat(processing.getResultPath().replace("shared", "")))
                 .concat(generateInputParamString(processing.getProcessingData()))
                 .concat("Best,\n")
                 .concat("CMEMS Marine Team");
