@@ -50,13 +50,13 @@ public class MailServiceImpl implements MailService{
      */
     @Override
     public String sendMailEnqueuedRequest(Processing processing) throws ProcessingInputParamsException {
-        String text = "Dear "
+        String text = "<p>Dear "
                 .concat(processing.getUserEmail())
-                .concat(",\n")
-                .concat("your request has been enqueued and will be processed as soon as possible.\n")
+                .concat(",</p>")
+                .concat("<p>your request has been enqueued and will be processed as soon as possible.</p>")
                 .concat(generateInputParamString(processing.getProcessingData()))
-                .concat("Best,\n")
-                .concat("CMEMS Marine Team");
+                .concat("<br /><br /><p>Best,<p>")
+                .concat("<p>CMEMS Marine Team</p>");
         sendMail(processing.getUserEmail(), text);
         return text;
     }
@@ -69,12 +69,14 @@ public class MailServiceImpl implements MailService{
     private String generateInputParamString(ProcessingData processingData) throws ProcessingInputParamsException {
 
 
-        return "\n".concat(Stream.of(
-                "Provided request parameters:",
-                humanReadbleExctractor.extractAoI(processingData.getAoi()),
-                humanReadbleExctractor.extractProduct(processingData.getProduct()),
-                humanReadbleExctractor.extractDates(Arrays.asList(processingData.getStartDate(), processingData.getEndDate()))
-        ).collect(Collectors.joining(" "))).concat("\n");
+        return "<div>".concat(Stream.of(
+                "<p>Provided request parameters:</p>",
+                "<ul>",
+                "<li> Area of Interest: ".concat(humanReadbleExctractor.extractAoI(processingData.getAoi())).concat("</li>"),
+                "<li>Products: ".concat(humanReadbleExctractor.extractProduct(processingData.getProduct())).concat("</li>"),
+                "<li>Dates: ".concat(humanReadbleExctractor.extractDates(Arrays.asList(processingData.getStartDate(), processingData.getEndDate()))).concat("</li>"),
+                "</ul>"
+        ).collect(Collectors.joining("\n"))).concat("</div>");
 
 
     }
@@ -86,14 +88,16 @@ public class MailServiceImpl implements MailService{
      */
     @Override
     public String sendMailSucceedRequest(Processing processing) throws ProcessingInputParamsException {
-        String text = "Dear "
+        String text = "<p>Dear "
                 .concat(processing.getUserEmail())
-                .concat(",\n")
-                .concat("your request has been processed and result is available at this link:\n")
-                .concat(downloadBasePath.concat(processing.getResultPath().replace("shared", "")))
+                .concat(",</p>")
+                .concat("<p>your request has been processed and result is available at this ")
+                .concat("<a href=")
+                .concat(downloadBasePath)
+                .concat(processing.getResultPath().replace("shared", "") + ">link</a>")
                 .concat(generateInputParamString(processing.getProcessingData()))
-                .concat("Best,\n")
-                .concat("CMEMS Marine Team");
+                .concat("<br /><br /><p>Best,<p>")
+                .concat("<p>CMEMS Marine Team</p>");
         sendMail(processing.getUserEmail(), text);
         return text;
     }
@@ -105,13 +109,13 @@ public class MailServiceImpl implements MailService{
      */
     @Override
     public String sendMailFailedRequest(Processing processing) throws ProcessingInputParamsException {
-        String text = "Dear "
+        String text = "<p>Dear "
                 .concat(processing.getUserEmail())
-                .concat(",\n")
-                .concat("an error occured while serving your request.\n")
+                .concat(",</p>")
+                .concat("<p>an error occured while serving your request.<p>")
                 .concat(generateInputParamString(processing.getProcessingData()))
-                .concat("Best\n")
-                .concat("CMEMS Marine Team");
+                .concat("<br /><br /><p>Best,<p>")
+                .concat("<p>CMEMS Marine Team</p>");
         sendMail(processing.getUserEmail(), text);
         return text;
     }
