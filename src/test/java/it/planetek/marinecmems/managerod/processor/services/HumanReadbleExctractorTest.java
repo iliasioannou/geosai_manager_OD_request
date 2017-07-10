@@ -1,6 +1,9 @@
 package it.planetek.marinecmems.managerod.processor.services;
 
 import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputParamsException;
+import it.planetek.marinecmems.managerod.processor.services.exctractors.HumanReadbleExctractor;
+import it.planetek.marinecmems.managerod.processor.services.exctractors.HumanReadbleExctractorImpl;
+import it.planetek.marinecmems.managerod.processor.services.exctractors.ProductExtractor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +35,9 @@ public class HumanReadbleExctractorTest {
     @Mock
     private ProcessorParamValidatorService processorParamValidatorService;
 
+    @Mock
+    private ProductExtractor productExtractor;
+
     @Before
     public void setUp() throws ProcessingInputParamsException {
         MockitoAnnotations.initMocks(this);
@@ -42,7 +48,10 @@ public class HumanReadbleExctractorTest {
         when(processorParamValidatorService.validateAoi(null)).thenThrow(new ProcessingInputParamsException("AOI null"));
         when(processorParamValidatorService.validateProduct(null)).thenThrow(new ProcessingInputParamsException("product null"));
         when(processorParamValidatorService.validateDates(null)).thenThrow(new ProcessingInputParamsException("date is null"));;
-        when(processorParamValidatorService.validateDates(Arrays.asList(new Date()))).thenThrow(new ProcessingInputParamsException("date size"));;
+        when(processorParamValidatorService.validateDates(Arrays.asList(new Date()))).thenThrow(new ProcessingInputParamsException("date size"));
+        when(productExtractor.mapProductStringsToProductLabels("15", "human")).thenReturn(Arrays.asList("Chlorophille"));
+        when(productExtractor.mapProductStringsToProductLabels("1", "human")).thenReturn(Arrays.asList("Sea surface temperature"));
+
     }
     @Test
     public void extractAoITest() throws Exception {

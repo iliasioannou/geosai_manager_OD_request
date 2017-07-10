@@ -4,7 +4,7 @@ import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputPa
 import it.planetek.marinecmems.managerod.mailsender.utils.Sender;
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
 import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
-import it.planetek.marinecmems.managerod.processor.services.HumanReadbleExctractor;
+import it.planetek.marinecmems.managerod.processor.services.exctractors.HumanReadbleExctractor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

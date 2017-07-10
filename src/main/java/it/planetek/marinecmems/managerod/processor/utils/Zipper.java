@@ -27,5 +27,5 @@ public class Zipper {
             ZipUtil.pack(new File(sourceFile),
                     new File(destPath));
             return destPath;
-        }
+    }
 }

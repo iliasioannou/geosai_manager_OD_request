@@ -1,4 +1,4 @@
-package it.planetek.marinecmems.managerod.processor.services;
+package it.planetek.marinecmems.managerod.processor.services.exctractors;
 
 import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputParamsException;
 

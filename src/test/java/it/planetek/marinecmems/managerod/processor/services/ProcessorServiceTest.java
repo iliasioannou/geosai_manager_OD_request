@@ -9,6 +9,8 @@ import it.planetek.marinecmems.managerod.manager.controllers.models.ProcessingMo
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
 import it.planetek.marinecmems.managerod.manager.domains.ProcessingData;
 import it.planetek.marinecmems.managerod.manager.services.ProcessingService;
+import it.planetek.marinecmems.managerod.processor.services.exctractors.ProductExtractor;
+import it.planetek.marinecmems.managerod.processor.utils.Copier;
 import it.planetek.marinecmems.managerod.processor.utils.Zipper;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,7 +22,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -51,11 +53,18 @@ public class ProcessorServiceTest {
     @Mock
     private ProcessorParamValidatorService processorParamValidatorService;
 
+    @Mock
+    private Copier copierService;
+
+    @Mock
+    private ProductExtractor productExtractor;
+
+
     private ProcessingModel processingModel;
 
 
     @Before
-    public void setUp() throws MalformedURLException, XMLRPCException, ProcessingInputParamsException {
+    public void setUp() throws IOException, XMLRPCException, ProcessingInputParamsException {
         Processing savedProcessing = new Processing();
         savedProcessing.setResultPath("ciccio.zip");
 
@@ -69,10 +78,13 @@ public class ProcessorServiceTest {
         when(processorParamValidatorService.validateAoi(anyString())).thenReturn("aoi");
         when(processorParamValidatorService.validateProduct(anyString())).thenReturn("aoi");
         when(processorParamValidatorService.validateDates(anyListOf(Date.class))).thenReturn(Arrays.asList(new Date(), new Date()));
+        when(productExtractor.mapProductStringsToProductLabels(anyString(), anyString())).thenReturn(Arrays.asList("SST"));
+        when(copierService.copyFileInFolder(anyString(), anyString())).thenReturn("outPath");
+
         ReflectionTestUtils.setField(processorService, "processorMethodName", "execute");
         ReflectionTestUtils.setField(processorService, "processorOuptutFolder", "output");
         ReflectionTestUtils.setField(processorService, "downloadOutputFolder", "/download");
-
+        ReflectionTestUtils.setField(processorService, "legendaFolder", "/legenda");
         processingModel = new ProcessingModel();
         processingModel.setUserEmail("data");
 

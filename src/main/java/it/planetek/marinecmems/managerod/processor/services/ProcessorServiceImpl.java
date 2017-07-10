@@ -9,6 +9,8 @@ import it.planetek.marinecmems.managerod.manager.controllers.models.ProcessingMo
 import it.planetek.marinecmems.managerod.manager.domains.Processing;
 import it.planetek.marinecmems.managerod.manager.services.ProcessingService;
 import it.planetek.marinecmems.managerod.processor.exceptions.ProcessorResultException;
+import it.planetek.marinecmems.managerod.processor.services.exctractors.ProductExtractor;
+import it.planetek.marinecmems.managerod.processor.utils.Copier;
 import it.planetek.marinecmems.managerod.processor.utils.Zipper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,6 +40,9 @@ public class ProcessorServiceImpl implements ProcessorService {
     @Value("${download.outputFolder}")
     private String downloadOutputFolder;
 
+    @Value("${legenda.folder}")
+    private String legendaFolder;
+
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
@@ -53,6 +59,12 @@ public class ProcessorServiceImpl implements ProcessorService {
 
     @Autowired
     private ProcessorParamValidatorService processorParamValidatorService;
+
+    @Autowired
+    private ProductExtractor productExtractor;
+
+    @Autowired
+    private Copier copierService;
 
     /***
      * Call the RPC XML server via RPC XML client
@@ -93,7 +105,13 @@ public class ProcessorServiceImpl implements ProcessorService {
     }
 
     /***
-     * Start processing
+     * Start processing:
+     * - call processors;
+     * - validate result
+     * - exctract product legenda labels
+     * - zip content
+     * - update db state
+     * - send mail
      * @param processingModel the processing model info with informations coming from client
      * @param processing a processing instance (with persisted local informations)
      *
@@ -110,6 +128,19 @@ public class ProcessorServiceImpl implements ProcessorService {
 
             HashMap<String, Object> resultMap = objectMapper.readValue(result, HashMap.class);
             validateResult(resultMap);
+
+            List<String> legendList = productExtractor.mapProductStringsToProductLabels(processing.getProcessingData().getProduct(), "legend");
+
+            legendList.forEach(ll -> {
+                try {
+                    copierService.copyFileInFolder(
+                            legendaFolder.concat("Legenda_".concat(ll)),
+                            processorOuptutFolder.concat((String) resultMap.get("outPath")));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
             String outPath = zipperService.zipFileWithRandomName(
                     processorOuptutFolder.concat((String)resultMap.get("outPath")),
                     downloadOutputFolder

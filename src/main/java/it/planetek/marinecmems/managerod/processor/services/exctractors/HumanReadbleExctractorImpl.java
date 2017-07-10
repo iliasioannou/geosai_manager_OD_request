@@ -1,14 +1,13 @@
-package it.planetek.marinecmems.managerod.processor.services;
+package it.planetek.marinecmems.managerod.processor.services.exctractors;
 
 import it.planetek.marinecmems.managerod.mailsender.exceptions.ProcessingInputParamsException;
+import it.planetek.marinecmems.managerod.processor.services.ProcessorParamValidatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -18,7 +17,11 @@ import java.util.stream.Collectors;
 public class HumanReadbleExctractorImpl  implements HumanReadbleExctractor {
 
     @Autowired
-    private  ProcessorParamValidatorService processorParamValidatorService;
+    private ProcessorParamValidatorService processorParamValidatorService;
+
+
+    @Autowired
+    private ProductExtractor productExtractor;
 
     /***
      * Exctract the Area of Interest
@@ -46,14 +49,7 @@ public class HumanReadbleExctractorImpl  implements HumanReadbleExctractor {
     @Override
     public String extractProduct(String product) throws ProcessingInputParamsException {
         processorParamValidatorService.validateProduct(product);
-        int products = Integer.valueOf(product);
-        List<String> productLabels = new ArrayList<>();
-
-        if (!((products & 1) == 0)) productLabels.add("Sea surface temperature");
-        if (!((products & 2) == 0)) productLabels.add("Chlorophille");
-        if (!((products & 4) == 0)) productLabels.add("Water temperature");
-        if (!((products & 8) == 0)) productLabels.add("Turbidity");
-
+        List<String> productLabels = productExtractor.mapProductStringsToProductLabels(product, "human");
         return productLabels.stream().collect(Collectors.joining(","));
     }
 
