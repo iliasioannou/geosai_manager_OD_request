@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class GlobalExceptionHandler {
     public Map handle(ProcessingRequestAlreadyInQueueException exception) {
         log.error(exception.getMessage());
         log.info("------ END MANAGER OD REQUEST -----");
-        return error("You cannot star a new processing until a previous one has not been marked as completed.");
+        return error(Arrays.asList("You cannot start a new processing until a previous one has not been marked as completed."));
     }
 
     private Map error(Object message) {
