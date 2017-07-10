@@ -134,7 +134,7 @@ public class ProcessorServiceImpl implements ProcessorService {
             legendList.forEach(ll -> {
                 try {
                     copierService.copyFileInFolder(
-                            legendaFolder.concat("Legenda_".concat(ll)),
+                            legendaFolder.concat("Legend_".concat(ll).concat(".png")),
                             processorOuptutFolder.concat((String) resultMap.get("outPath")));
                 } catch (IOException e) {
                     e.printStackTrace();
