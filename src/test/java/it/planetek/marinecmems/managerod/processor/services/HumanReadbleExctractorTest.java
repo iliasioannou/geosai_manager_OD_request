@@ -38,12 +38,15 @@ public class HumanReadbleExctractorTest {
     @Mock
     private ProductExtractor productExtractor;
 
+    private Date mockDate;
+
     @Before
     public void setUp() throws ProcessingInputParamsException {
         MockitoAnnotations.initMocks(this);
         when(processorParamValidatorService.validateAoi(anyString())).thenReturn("aoi");
         when(processorParamValidatorService.validateProduct(anyString())).thenReturn("aoi");
         when(processorParamValidatorService.validateDates(anyListOf(Date.class))).thenReturn(Arrays.asList(new Date(), new Date()));
+        when(processorParamValidatorService.validateDates(Arrays.asList(mockDate))).thenThrow(new ProcessingInputParamsException("Wrong dates"));
 
         when(processorParamValidatorService.validateAoi(null)).thenThrow(new ProcessingInputParamsException("AOI null"));
         when(processorParamValidatorService.validateProduct(null)).thenThrow(new ProcessingInputParamsException("product null"));
@@ -95,8 +98,7 @@ public class HumanReadbleExctractorTest {
 
     @Test(expected = ProcessingInputParamsException.class)
     public void extractDatesErrorSizeTest() throws Exception {
-        Date date = new Date();
-        humanReadbleExctractor.extractDates(Arrays.asList(date));
+        humanReadbleExctractor.extractDates(Arrays.asList(mockDate));
 
     }
 
