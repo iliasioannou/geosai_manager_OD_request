@@ -31,6 +31,9 @@ public class ProductExtractor {
     private Map<String, String> legendStringLabels;
 
 
+    /***
+     * Fill private variable with legend/hum labels
+     */
     public ProductExtractor() {
         List<String> productLabels = extractProductType("15");
 
