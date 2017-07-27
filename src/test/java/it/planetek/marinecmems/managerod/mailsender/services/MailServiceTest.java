@@ -41,7 +41,7 @@ public class MailServiceTest {
     @Before
     public void setUp() throws ProcessingInputParamsException {
         MockitoAnnotations.initMocks(this);
-        when(sender.sendMail(anyString(),anyString(), anyString(), anyString())).thenReturn(true);
+        when(sender.sendMail(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(true);
         when(humanReadbleExctractor.extractAoI(anyString())).thenReturn("1");
         when(humanReadbleExctractor.extractProduct(anyString())).thenReturn("15");
         when(humanReadbleExctractor.extractDates(anyListOf(Date.class))).thenReturn("1");

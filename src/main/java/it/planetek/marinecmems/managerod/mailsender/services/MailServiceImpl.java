@@ -25,6 +25,9 @@ public class MailServiceImpl implements MailService{
     @Value("${mail.subject}")
     private String subject;
 
+    @Value("${mail.bcc}")
+    private String bcc;
+
     @Value("${download.downloadBasePath}")
     private String downloadBasePath;
 
@@ -41,7 +44,7 @@ public class MailServiceImpl implements MailService{
      * @param text the text to be sent
      */
     private void sendMail(String toAddress, String text){
-        sender.sendMail(fromAddress, subject, toAddress, text);
+        sender.sendMail(fromAddress, subject, toAddress, bcc, text);
     }
 
     /***

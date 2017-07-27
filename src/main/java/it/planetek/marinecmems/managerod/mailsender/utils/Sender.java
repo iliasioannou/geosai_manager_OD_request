@@ -1,12 +1,10 @@
 package it.planetek.marinecmems.managerod.mailsender.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 /**
@@ -25,7 +23,7 @@ public class Sender {
      * @param fromAddress the address the email will be sent from
      * @param subject the subject the mail will be sent with
      */
-    public boolean sendMail(String fromAddress, String subject, String toAddress, String message) {
+    public boolean sendMail(String fromAddress, String subject, String toAddress, String bcc, String message) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "utf-8");
@@ -33,9 +31,10 @@ public class Sender {
             helper.setTo(toAddress);
             helper.setSubject(subject);
             helper.setFrom(fromAddress);
+            helper.setBcc(bcc);
             javaMailSender.send(mimeMessage);
             return true;
-        } catch (MessagingException | MailException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         } finally {
