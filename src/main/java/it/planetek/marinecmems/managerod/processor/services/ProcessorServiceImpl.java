@@ -151,7 +151,7 @@ public class ProcessorServiceImpl implements ProcessorService {
         } catch (XMLRPCException | IOException | ProcessorResultException ex){
             ex.printStackTrace();
             Processing resultProcessing = updateResult(processing, null);
-            mailService.sendMailEnqueuedRequest(resultProcessing);
+            mailService.sendMailFailedRequest(resultProcessing);
             return resultProcessing;
         }
     }
