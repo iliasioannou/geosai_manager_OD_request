@@ -97,7 +97,7 @@ public class MailServiceImpl implements MailService{
                 .concat("<p>your request has been processed and result is available at this ")
                 .concat("<a href=")
                 .concat(downloadBasePath)
-                .concat(processing.getResultPath().replace("shared", "") + ">link</a>.")
+                .concat(processing.getResultPath().replace("shared", "").replace("/download", "") + ">link</a>.")
                 .concat(generateInputParamString(processing.getProcessingData()))
                 .concat("<br /><br /><p>Best,<p>")
                 .concat("<p>CMEMS Marine Team</p>");
