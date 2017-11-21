@@ -2,7 +2,7 @@ version: '2'
 services:
   mysql_manager:
     image: mysql
-    container_name: cmems_manager_mysql
+    container_name: eosai_manager_mysql
     ports:
       - 3306:3306
     environment:
