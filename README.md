@@ -1,4 +1,4 @@
-# Requisites
+# Requirements
 
 - Mysql (use the docker-compose file to pull up a Mysql instance)
 
