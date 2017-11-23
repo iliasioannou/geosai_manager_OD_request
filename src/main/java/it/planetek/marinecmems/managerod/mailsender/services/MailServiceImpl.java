@@ -59,7 +59,7 @@ public class MailServiceImpl implements MailService{
                 .concat("<p>your request has been enqueued and will be processed as soon as possible.</p>")
                 .concat(generateInputParamString(processing.getProcessingData()))
                 .concat("<br /><br /><p>Best,<p>")
-                .concat("<p>CMEMS Marine Team</p>");
+                .concat("<p>EOSAI Marine Team</p>");
         sendMail(processing.getUserEmail(), text);
         return text;
     }
