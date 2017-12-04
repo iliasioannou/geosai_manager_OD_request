@@ -11,10 +11,10 @@ services:
       - MYSQL_PASSWORD=cmems
       - MYSQL_ROOT_PASSWORD=cmems
   processors:
-    image: planetek/eosai_processors:develop
+    image: dockerhub.planetek.it/pkh111_eosai_processors:master
     container_name: eosai_processors
     volumes:
-      - /home/francesco/cmems/pkz029_UU_CMEMS_dockerized/shared_data/C5_OutputDir:/src/Processors/server/processors/C5_OutputDir
-      - /home/francesco/cmems/pkz029_UU_CMEMS_dockerized/shared_data/C3_Input:/src/Processors/server/processors/C3_Input
+      - /home/dockermanager/pkh111_EOSAI_dockerized/shared_data/C5_OutputDir:/src/Processors/server/processors/C5_OutputDir
+      - /home/dockermanager/pkh111_EOSAI_dockerized/shared_data/C3_Input:/src/Processors/server/processors/C3_Input
     ports:
       - 9091:9091
