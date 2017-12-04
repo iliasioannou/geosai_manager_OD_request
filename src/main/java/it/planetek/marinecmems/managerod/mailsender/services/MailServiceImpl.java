@@ -100,7 +100,7 @@ public class MailServiceImpl implements MailService{
                 .concat(processing.getResultPath().replace("shared", "").replace("/download/", "") + ">link</a>.")
                 .concat(generateInputParamString(processing.getProcessingData()))
                 .concat("<br /><br /><p>Best,<p>")
-                .concat("<p>CMEMS Marine Team</p>");
+                .concat("<p>EOSAI Marine Team</p>");
         sendMail(processing.getUserEmail(), text);
         return text;
     }
@@ -118,7 +118,7 @@ public class MailServiceImpl implements MailService{
                 .concat("<p>an error occured while serving your request.<p>")
                 .concat(generateInputParamString(processing.getProcessingData()))
                 .concat("<br /><br /><p>Best,<p>")
-                .concat("<p>CMEMS Marine Team</p>");
+                .concat("<p>EOSAI Marine Team</p>");
         sendMail(processing.getUserEmail(), text);
         return text;
     }
